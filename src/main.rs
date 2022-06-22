@@ -24,18 +24,35 @@ struct ChunkHeader {
     features: u32,
 }
 
+fn u8_to_u16(source: &Vec<u8>, index: usize) -> u16 {
+    u16::from_be_bytes([source[index], source[index + 1]])
+}
+
+fn u8_to_u64(source: &Vec<u8>, index: usize) -> u64 {
+    u64::from_be_bytes([
+        source[index],
+        source[index + 1],
+        source[index + 2],
+        source[index + 3],
+        source[index + 4],
+        source[index + 5],
+        source[index + 6],
+        source[index + 7]
+    ])
+}
+
 fn parse_header(source: &Vec<u8>) -> ChunkHeader {
-    ChunkHeader{
-        major_version: ((source[32] as u16) << 8) | source[33] as u16,
-        minor_version: 0,
-        size: 0,
-        constant_pool_offset: 0,
-        metadata_offset: 0,
-        start_nanos: 0,
-        duration_nanos: 0,
-        start_ticks: 0,
-        ticks_per_second: 0,
-        features: 0
+    ChunkHeader {
+        major_version: u8_to_u16(source, 4),
+        minor_version: u8_to_u16(source, 6),
+        size: u8_to_u64(source, 16),
+        constant_pool_offset: u8_to_u64(source, 24),
+        metadata_offset: u8_to_u64(source, 32),
+        start_nanos: u8_to_u64(source, 40),
+        duration_nanos: u8_to_u64(source, 48),
+        start_ticks: u8_to_u64(source, 56),
+        ticks_per_second: u8_to_u64(source, 64),
+        features: 0,
     }
 }
 
