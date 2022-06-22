@@ -2,3 +2,5 @@
 .idea
 **/Cargo.lock
 **/*.jfr
+/raw.txt
+/tmp.txt
